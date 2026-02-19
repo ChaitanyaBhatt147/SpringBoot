@@ -11,38 +11,39 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
-import com.rays.dto.RoleDTO;
+import com.rays.dto.UserDTO;
 
 @Repository
-public class RoleDAO {
+public class UserDAO {
+
 	@PersistenceContext
 	public EntityManager entityManager;
-
-	public long add(RoleDTO dto) {
+	
+	public Long add(UserDTO dto) {
 		entityManager.persist(dto);
 		return dto.getId();
 	}
-
-	public void update(RoleDTO dto) {
+	
+	public void Update(UserDTO dto) {
 		entityManager.merge(dto);
 	}
-
-	public void delete(RoleDTO dto) {
+	
+	public void delete(UserDTO dto) {
 		entityManager.remove(dto);
 	}
-
-	public RoleDTO findByPk(long pk) {
-		RoleDTO dto = entityManager.find(RoleDTO.class, pk);
+	
+	public UserDTO findByPk(Long id) {
+		UserDTO dto = entityManager.find(UserDTO.class, id);
 		return dto;
 	}
-
-	public List<RoleDTO> search(RoleDTO dto, int pageNo, int pageSize) {
-		List<RoleDTO> list = null;
+	
+	public List<UserDTO> search(UserDTO dto, int pageNo, int pageSize) {
+		List<UserDTO> list = null;
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<RoleDTO> cq = builder.createQuery(RoleDTO.class);
-		Root<RoleDTO> qRoot = cq.from(RoleDTO.class);
+		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
+		Root<UserDTO> qRoot = cq.from(UserDTO.class);
 		cq.select(qRoot);
-		TypedQuery<RoleDTO> tq = entityManager.createQuery(cq);
+		TypedQuery<UserDTO> tq = entityManager.createQuery(cq);
 
 		if (pageSize > 0) {
 			tq.setFirstResult(pageNo * pageSize);

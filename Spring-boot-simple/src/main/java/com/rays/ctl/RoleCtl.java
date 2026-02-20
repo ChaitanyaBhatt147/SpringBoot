@@ -22,7 +22,7 @@ import com.rays.service.RoleService;
 
 @RestController
 @RequestMapping("Role")
-public class RoleCtl extends BaseCtl{
+public class RoleCtl extends BaseCtl {
 
 	@Autowired
 	RoleService roleService;
@@ -36,9 +36,7 @@ public class RoleCtl extends BaseCtl{
 		}
 
 		RoleDTO dto = new RoleDTO();
-
-		dto.setName(form.getName());
-		dto.setDescription(form.getDescription());
+		dto = (RoleDTO) form.getDto();
 
 		long id = roleService.add(dto);
 
@@ -47,21 +45,21 @@ public class RoleCtl extends BaseCtl{
 		res.addData(dto);
 		return res;
 	}
+
 	@PostMapping("update")
 	public ORSResponse update(@RequestBody @Valid RoleForm form, BindingResult bindingResult) {
 
 		ORSResponse res = new ORSResponse();
-		
+
 		res = validate(bindingResult);
 		if (!res.isSuccess()) {
 			return res;
 		}
-		
+
 		RoleDTO dto = new RoleDTO();
 
-		dto.setId(form.getId());
-		dto.setName(form.getName());
-		dto.setDescription(form.getDescription());
+		dto = (RoleDTO) form.initDTO(dto);
+		dto = (RoleDTO) form.getDto();
 
 		roleService.update(dto);
 
@@ -109,10 +107,10 @@ public class RoleCtl extends BaseCtl{
 	public ORSResponse search(@RequestBody RoleForm form, @PathVariable(required = false) int pageNo) {
 
 		ORSResponse res = new ORSResponse();
-
+		RoleDTO dto = (RoleDTO) form.getDto();
 		int pageSize = 5;
 
-		List<RoleDTO> list = roleService.search(null, pageNo, pageSize);
+		List<RoleDTO> list = roleService.search(dto, pageNo, pageSize);
 
 		if (list.size() > 0) {
 			res.setSuccess(true);

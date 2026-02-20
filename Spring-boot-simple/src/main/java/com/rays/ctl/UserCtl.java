@@ -36,12 +36,7 @@ public class UserCtl extends BaseCtl{
 		}
 
 		UserDTO dto = new UserDTO();
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setLogin(form.getLoginId());
-		dto.setPassword(form.getPassword());
-		dto.setRoleId(form.getRoleId());
-		dto.setDob(form.getDob());
+		dto = (UserDTO) form.getDto();
 
 		long id = userService.add(dto);
 
@@ -61,13 +56,8 @@ public class UserCtl extends BaseCtl{
 		}
 		
 		UserDTO dto = new UserDTO();
-		dto.setId(form.getId());
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setLogin(form.getLoginId());
-		dto.setPassword(form.getPassword());
-		dto.setRoleId(form.getRoleId());
-		dto.setDob(form.getDob());	
+		dto = (UserDTO) form.initDTO(dto);
+		dto = (UserDTO)	form.getDto();
 
 		userService.update(dto);
 
@@ -115,10 +105,10 @@ public class UserCtl extends BaseCtl{
 	public ORSResponse search(@RequestBody UserForm form, @PathVariable(required = false) int pageNo) {
 
 		ORSResponse res = new ORSResponse();
-
+		UserDTO dto = (UserDTO) form.getDto();
 		int pageSize = 5;
 
-		List<UserDTO> list = userService.search(null, pageNo, pageSize);
+		List<UserDTO> list = userService.search(dto, pageNo, pageSize);
 
 		if (list.size() > 0) {
 			res.setSuccess(true);

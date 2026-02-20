@@ -1,5 +1,6 @@
 package com.rays.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,10 +8,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rays.dto.RoleDTO;
 import com.rays.dto.UserDTO;
 
 @Repository
@@ -19,7 +23,19 @@ public class UserDAO {
 	@PersistenceContext
 	public EntityManager entityManager;
 	
+	@Autowired
+	RoleDAO roleDao;
+	
+	public UserDTO populate(UserDTO dto) {
+		if (dto.getRoleId() != null && dto.getRoleId() > 0) {
+			RoleDTO roleDto = roleDao.findByPk(dto.getRoleId());
+			dto.setRoleName(roleDto.getName());
+		}
+		return dto;
+	}
+	
 	public Long add(UserDTO dto) {
+		dto = populate(dto);
 		entityManager.persist(dto);
 		return dto.getId();
 	}
@@ -42,7 +58,26 @@ public class UserDAO {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
 		Root<UserDTO> qRoot = cq.from(UserDTO.class);
-		cq.select(qRoot);
+		
+		List<Predicate> predicateList = new ArrayList<Predicate>();	
+		
+		if (dto != null) {
+			if (dto.getFirstName() != null && dto.getFirstName().length() >0) {
+				predicateList.add(builder.like(qRoot.get("firstName"), dto.getFirstName()+"%"));
+			}
+			if (dto.getLastName() != null && dto.getLastName().length() >0) {
+				predicateList.add(builder.like(qRoot.get("lastName"), dto.getLastName()+"%"));
+			}
+			if (dto.getLogin() != null && dto.getLogin().length() >0) {
+				predicateList.add(builder.like(qRoot.get("login"), dto.getLogin()+"%"));
+			}
+			if (dto.getRoleName() != null && dto.getRoleName().length() >0) {
+				predicateList.add(builder.like(qRoot.get("roleName"), dto.getRoleName()+"%"));
+			}
+		}
+		
+//		cq.select(qRoot);
+		cq.where(predicateList.toArray(new Predicate[predicateList.size()]));
 		TypedQuery<UserDTO> tq = entityManager.createQuery(cq);
 
 		if (pageSize > 0) {

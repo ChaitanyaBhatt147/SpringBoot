@@ -28,6 +28,20 @@ public class UserForm extends BaseForm {
 	
 	@NotNull(message = "Role ID is required")
 	private Long roleId;
+	
+	private Long imageId;
+
+	public Long getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Long imageId) {
+		this.imageId = imageId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -67,14 +81,6 @@ public class UserForm extends BaseForm {
 
 	public void setDob(Date dob) {
 		this.dob = dob;
-	}
-
-	public long getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
 	}
 
 	@Override

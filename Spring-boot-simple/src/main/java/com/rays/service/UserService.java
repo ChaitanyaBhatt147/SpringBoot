@@ -1,6 +1,5 @@
 package com.rays.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +14,20 @@ import com.rays.dto.UserDTO;
 @Service
 @Transactional
 public class UserService {
-	
+
 	@Autowired
 	public UserDAO userDao;
-	
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	public long add(UserDTO dto) {
 		return userDao.add(dto);
 	}
-	
-	
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void update(UserDTO dto) {
 		userDao.Update(dto);
 	}
-	
-	
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void delete(Long id) {
 		try {
@@ -40,17 +37,25 @@ public class UserService {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
+
 	@Transactional(readOnly = true)
 	public UserDTO findByPk(Long id) {
 		return userDao.findByPk(id);
 	}
-	
-	
+
 	@Transactional(readOnly = true)
 	public List<UserDTO> search(UserDTO dto, int pageNo, int pageSize) {
 		return userDao.search(dto, pageNo, pageSize);
 	}
-	
+
+	@Transactional(readOnly = true)
+	public UserDTO authenticate(String login, String password) {
+		UserDTO dto = userDao.findByUnique("login", login);
+		if (dto != null) {
+			if (dto.getPassword().equals(password)) {
+				return dto;
+			}
+		}
+		return null;
+	}
 }

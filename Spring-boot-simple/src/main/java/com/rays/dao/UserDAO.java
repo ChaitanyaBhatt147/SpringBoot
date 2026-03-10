@@ -87,8 +87,8 @@ public class UserDAO {
 			if (dto.getLogin() != null && dto.getLogin().length() > 0) {
 				predicateList.add(builder.like(qRoot.get("login"), dto.getLogin() + "%"));
 			}
-			if (dto.getRoleName() != null && dto.getRoleName().length() > 0) {
-				predicateList.add(builder.like(qRoot.get("roleName"), dto.getRoleName() + "%"));
+			if (dto.getRoleId() != null && dto.getRoleId() > 0) {
+				predicateList.add(builder.equal(qRoot.get("roleId"), dto.getRoleId()));
 			}
 		}
 

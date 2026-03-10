@@ -9,8 +9,7 @@ import com.rays.common.BaseDTO;
 import com.rays.common.BaseForm;
 import com.rays.dto.UserDTO;
 
-public class UserForm extends BaseForm {
-
+public class UserRegistrationForm extends BaseForm{
 	@NotEmpty(message = "firstName is required")
 	private String firstName;
 
@@ -18,7 +17,7 @@ public class UserForm extends BaseForm {
 	private String lastName;
 
 	@NotEmpty(message = "login is required")
-	private String login;
+	private String loginId;
 
 	@NotEmpty(message = "password is required")
 	private String password;
@@ -26,24 +25,7 @@ public class UserForm extends BaseForm {
 	@NotNull(message = "Date of birth is required")
 	private Date dob;
 	
-	@NotNull(message = "Role ID is required")
 	private Long roleId;
-	
-	private String roleName;
-	
-	private Long imageId;
-
-	public Long getImageId() {
-		return imageId;
-	}
-
-	public void setImageId(Long imageId) {
-		this.imageId = imageId;
-	}
-
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -61,12 +43,12 @@ public class UserForm extends BaseForm {
 		this.lastName = lastName;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getLoginId() {
+		return loginId;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 
 	public String getPassword() {
@@ -85,19 +67,24 @@ public class UserForm extends BaseForm {
 		this.dob = dob;
 	}
 
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+	
 	@Override
 	public BaseDTO getDto() {
-		UserDTO dto = (UserDTO) initDTO(new UserDTO());
+		UserDTO dto = new UserDTO();
 		dto.setFirstName(firstName);
 		dto.setLastName(lastName);
-		dto.setLogin(login);
+		dto.setLogin(loginId);
 		dto.setPassword(password);
 		dto.setDob(dob);
-		dto.setRoleId(roleId);
-		dto.setRoleName(roleName);
-		dto.setImageId(imageId);
+		dto.setRoleId(2L);
 
 		return dto;
 	}
-
 }

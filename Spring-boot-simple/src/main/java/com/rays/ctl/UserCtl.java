@@ -53,47 +53,63 @@ public class UserCtl extends BaseCtl {
 
 	@PostMapping("save")
 	public ORSResponse save(@RequestBody @Valid UserForm form, BindingResult bindingResult) {
-		ORSResponse res = new ORSResponse();
-		res = validate(bindingResult);
+
+		ORSResponse res = validate(bindingResult);
+
 		if (!res.isSuccess()) {
 			return res;
 		}
 
-		UserDTO dto = new UserDTO();
-		dto = (UserDTO) form.getDto();
+		UserDTO dto = (UserDTO) form.getDto();
 
-		long id = userService.add(dto);
+		if (dto.getId() != null && dto.getId() > 0) {
 
-		res.setSuccess(true);
-		res.addMessage("User addedd successfully");
-		res.addData(dto);
-		return res;
-	}
+			UserDTO oldDto = userService.findByPk(dto.getId());
 
-	@PostMapping("update")
-	public ORSResponse update(@RequestBody @Valid UserForm form, BindingResult bindingResult) {
+			// 🔥 IMAGE PROTECTION
+			if (dto.getImageId() == null) {
+				dto.setImageId(oldDto.getImageId());
+			}
 
-		ORSResponse res = new ORSResponse();
+			userService.update(dto);
 
-		res = validate(bindingResult);
-		if (!res.isSuccess()) {
-			return res;
+			res.addData(dto.getId());
+			res.addMessage("Data Updated Successfully..!!");
+			res.setSuccess(true);
+
+		} else {
+
+			long pk = userService.add(dto);
+			res.addData(pk);
+			res.addMessage("Data added Successfully..!!");
+			res.setSuccess(true);
+
 		}
 
-		UserDTO dto = new UserDTO();
-		dto = (UserDTO) form.initDTO(dto);
-		dto = (UserDTO) form.getDto();
-
-		userService.update(dto);
-
-		res.setSuccess(true);
-		res.addMessage("User update successfully");
-
 		return res;
-
 	}
 
-	@PostMapping("delete/{ids}")
+	/*
+	 * @PostMapping("update") public ORSResponse update(@RequestBody @Valid UserForm
+	 * form, BindingResult bindingResult) {
+	 * 
+	 * ORSResponse res = new ORSResponse();
+	 * 
+	 * res = validate(bindingResult); if (!res.isSuccess()) { return res; }
+	 * 
+	 * UserDTO dto = new UserDTO(); dto = (UserDTO) form.initDTO(dto); dto =
+	 * (UserDTO) form.getDto();
+	 * 
+	 * userService.update(dto);
+	 * 
+	 * res.setSuccess(true); res.addMessage("User update successfully");
+	 * 
+	 * return res;
+	 * 
+	 * }
+	 */
+
+	@GetMapping("delete/{ids}")
 	public ORSResponse delete(@PathVariable(required = false) long[] ids) {
 
 		ORSResponse res = new ORSResponse();

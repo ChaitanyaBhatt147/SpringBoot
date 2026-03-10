@@ -71,7 +71,6 @@ public abstract class BaseDTO implements DropDownList{
 
 	@Override
 	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return id+"";
 	}
 }
